@@ -44,8 +44,8 @@ for (let i = 0; i < paths.length; i++) {
         dto: details.requestBody?.content?.['application/json'].schema,
         params: details.parameters,
         resultExample: (
-          Object.entries(details.responses).find(([code]) => code.startsWith('20'))?.[1] as any
-        ).content['application/json'].schema.properties.result,
+          Object.entries(details.responses)?.find(([code]) => code.startsWith('20'))?.[1] as any
+        )?.content['application/json']?.schema.properties.result,
       })
     )
   }
@@ -103,7 +103,9 @@ ${
     ? `/** ${props.resultExample.description} */
 `
     : ''
-}interface ${_.startCase(functionName).replaceAll(' ', '')}Result ${generateInterface(props.resultExample)}
+}interface ${_.startCase(functionName).replaceAll(' ', '')}Result ${generateInterface(
+          props.resultExample
+        )}
 `
       : ''
   }
