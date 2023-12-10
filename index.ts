@@ -45,7 +45,7 @@ for (let i = 0; i < paths.length; i++) {
         params: details.parameters,
         resultExample: (
           Object.entries(details.responses)?.find(([code]) => code.startsWith('20'))?.[1] as any
-        )?.content['application/json']?.schema.properties.result,
+        )?.content?.['application/json']?.schema.properties.result,
       })
     )
   }
