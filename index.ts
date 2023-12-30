@@ -1,16 +1,41 @@
 import $RefParser from '@apidevtools/json-schema-ref-parser'
+import 'dotenv/config'
 import fs from 'fs/promises'
 import _ from 'lodash'
 import path from 'path'
-import swagger from './swagger.json'
 import { generateInterface } from './parseSchema.js'
+// import swagger from './swagger.json'
 
-let schema = (await $RefParser.dereference(swagger)) as typeof swagger
+const startTime = performance.now()
+console.log('donwloading SwaggerDoc...')
+const res = await fetch(new URL('/docs/swagger-ui-init.js', process.env.API_URL).toString())
+const blob = await res.blob()
+const swaggerUiInitJs = await blob.text()
+const endTime = performance.now()
+console.log(`donwloading SwaggerDoc took ${(endTime - startTime).toFixed(3)} milliseconds`)
+
+const swaggerText = swaggerUiInitJs
+  .slice(
+    swaggerUiInitJs.indexOf('let options = {'),
+    swaggerUiInitJs.indexOf('url = options.swaggerUrl || url')
+  )
+  .trim()
+  .slice(14, -1)
+
+const swagger = JSON.parse(swaggerText).swaggerDoc
+
+const schema = (await $RefParser.dereference(swagger)) as typeof swagger
 
 await fs.rm('./dist', { recursive: true })
 // await fs.mkdir('./dist')
 
 // await fs.access('./dist', fs.constants.F_OK).catch(async () => await fs.mkdir('./dist'))
+
+// save swagger.json
+await fs
+  .access('./dist/.temp/', fs.constants.F_OK)
+  .catch(async () => await fs.mkdir('./dist/.temp/', { recursive: true }))
+fs.writeFile('./dist/.temp/swagger.json', JSON.stringify(swagger, undefined, 2))
 
 const paths = Object.entries(schema.paths)
 
