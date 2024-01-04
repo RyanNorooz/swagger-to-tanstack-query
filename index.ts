@@ -3,52 +3,49 @@ import 'dotenv/config'
 import fs from 'fs/promises'
 import _ from 'lodash'
 import path from 'path'
-import { generateInterface } from './parseSchema.js'
-// import swagger from './swagger.json'
+import { generateInterface } from './schemaToInterface.js'
+import { SwaggerDoc } from 'types.js'
+import minimist from 'minimist'
+
+const args = minimist(process.argv)
+if (!args.url) throw new Error('Please provide a url. (eg: bun . --url=https://api.com/doc-json)')
 
 const startTime = performance.now()
-console.log('donwloading SwaggerDoc...')
-const res = await fetch(new URL('/docs/swagger-ui-init.js', process.env.API_URL).toString())
+console.log('downloading SwaggerDoc...')
+
+const res = await fetch(new URL(args.url).toString())
 const blob = await res.blob()
-const swaggerUiInitJs = await blob.text()
+const swaggerJsonText = await blob.text()
+
 const endTime = performance.now()
-console.log(`donwloading SwaggerDoc took ${(endTime - startTime).toFixed(3)} milliseconds`)
+console.log(`downloading SwaggerDoc took ${(endTime - startTime).toFixed(3)} milliseconds`)
 
-const swaggerText = swaggerUiInitJs
-  .slice(
-    swaggerUiInitJs.indexOf('let options = {'),
-    swaggerUiInitJs.indexOf('url = options.swaggerUrl || url')
-  )
-  .trim()
-  .slice(14, -1)
-
-const swagger = JSON.parse(swaggerText).swaggerDoc
-
+const swagger = JSON.parse(swaggerJsonText) as SwaggerDoc
 const schema = (await $RefParser.dereference(swagger)) as typeof swagger
 
-await fs.rm('./dist', { recursive: true })
-// await fs.mkdir('./dist')
-
-// await fs.access('./dist', fs.constants.F_OK).catch(async () => await fs.mkdir('./dist'))
+await fs.rm('./out', { recursive: true })
+// await fs.access('./out', fs.constants.F_OK).catch(async () => await fs.mkdir('./out'))
 
 // save swagger.json
 await fs
-  .access('./dist/.temp/', fs.constants.F_OK)
-  .catch(async () => await fs.mkdir('./dist/.temp/', { recursive: true }))
-fs.writeFile('./dist/.temp/swagger.json', JSON.stringify(swagger, undefined, 2))
-
-const paths = Object.entries(schema.paths)
+  .access('./out/.temp/', fs.constants.F_OK)
+  .catch(async () => await fs.mkdir('./out/.temp/', { recursive: true }))
+fs.writeFile('./out/.temp/swagger.json', JSON.stringify(swagger, undefined, 2))
 
 const TQ_KEYS: Record<string, string> = {}
+const promises: Promise<void>[] = []
 
+const paths = Object.entries(schema.paths)
 for (let i = 0; i < paths.length; i++) {
   const [route, _methods] = paths[i]
   const methods = Object.entries(_methods)
 
   for (let i = 0; i < methods.length; i++) {
     const [method, details] = methods[i]
+    if (!details.tags?.length) continue
+
     const tag = _.kebabCase(details.tags[0].replaceAll(' ', ''))
-    const tagDir = `./dist/hooks/${tag}`
+    const tagDir = `./out/hooks/${tag}`
     await fs
       .access(tagDir, fs.constants.F_OK)
       .catch(async () => await fs.mkdir(tagDir, { recursive: true }))
@@ -59,24 +56,26 @@ for (let i = 0; i < paths.length; i++) {
         fileName.replace('use', '')
       )
 
-    fs.writeFile(
-      path.join(tagDir, `${fileName}.ts`),
-      generateTemplate({
-        fileName,
-        route,
-        method,
-        description: details.summary,
-        dto: details.requestBody?.content?.['application/json'].schema,
-        params: details.parameters,
-        resultExample: (
-          Object.entries(details.responses)?.find(([code]) => code.startsWith('20'))?.[1] as any
-        )?.content?.['application/json']?.schema.properties.result,
-      })
+    promises.push(
+      fs.writeFile(
+        path.join(tagDir, `${fileName}.ts`),
+        generateTemplate({
+          fileName,
+          route,
+          method,
+          description: details.summary,
+          dto: details.requestBody?.content?.['application/json'].schema,
+          params: details.parameters,
+          resultExample: Object.entries(details.responses)?.find(([code]) =>
+            code.startsWith('20')
+          )?.[1]?.content?.['application/json']?.schema.properties.result,
+        })
+      )
     )
   }
 }
 
-fs.writeFile('./dist/tq-keys.ts', `export const TQ_KEYS = ${JSON.stringify(TQ_KEYS, undefined, 2)}`)
+fs.writeFile('./out/tq-keys.ts', `export const TQ_KEYS = ${JSON.stringify(TQ_KEYS, undefined, 2)}`)
 
 interface GenerateTemplateProps {
   fileName: string

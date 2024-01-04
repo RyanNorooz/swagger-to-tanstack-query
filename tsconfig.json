@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "ESNext",
     "lib": ["ESNext"],
     "allowJs": true,
@@ -12,7 +13,8 @@
     "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "incremental": true
+    "incremental": true,
+    "noUncheckedIndexedAccess": true
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules"]
