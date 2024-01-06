@@ -20,17 +20,17 @@ interface Path {
 
 interface Post {
   operationId: string
-  summary: string
+  summary?: string
   tags?: string[]
   parameters: any[]
-  requestBody: RequestBody
+  requestBody?: RequestBody
   responses: Responses
   security?: Security[]
 }
 
 interface Get {
   operationId: string
-  summary: string
+  summary?: string
   tags?: string[]
   parameters: Parameter[]
   responses: Responses
@@ -39,26 +39,29 @@ interface Get {
 
 interface Patch {
   operationId: string
-  summary: string
+  summary?: string
   tags?: string[]
   parameters: any[]
-  requestBody: RequestBody
+  requestBody?: RequestBody
   responses: Responses
+  security?: Security[]
 }
 
 interface Delete {
   operationId: string
-  summary: string
+  summary?: string
   tags?: string[]
   parameters: Parameter[]
+  requestBody?: RequestBody
   responses: Responses
-  security: Security[]
+  security?: Security[]
 }
 
 export interface Parameter {
   name: string
   required: boolean
   in: string
+  example?: Example | { [key: string]: Example }
   schema: Schema
 }
 
@@ -76,10 +79,10 @@ interface ApplicationJson {
 }
 
 interface Responses {
-  '200': E200
-  '201': E201
-  '400': E400
-  default: Default
+  '200'?: E200
+  '201'?: E201
+  '400'?: E400
+  default?: Default
 }
 
 interface Security {
@@ -142,9 +145,9 @@ interface Properties {
 }
 
 export interface Schema {
-  type: Type
+  type?: Type
   description?: string
-  example?: string | Example // TODO: wider types?
+  example?: Example | { [key: string]: Example } // TODO: accurate?
   properties?: Properties
   oneOf?: Schema[]
   allOf?: Schema[]
@@ -152,12 +155,12 @@ export interface Schema {
   uniqueItems?: boolean
   items?: Schema
   format?: string
-  enum?: number | string[]
+  enum?: Example[]
+  minimum?: number
+  maximum?: number
   default?: number
 }
 
 type Type = 'object' | 'string' | 'number' | 'array' | 'Date' | 'boolean' | 'http'
 
-interface Example {
-  [key: string]: string | number // TODO: wider types?
-}
+type Example = string | number | boolean | Example[] // TODO: wider types?
