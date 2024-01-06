@@ -3,19 +3,19 @@
     "baseUrl": ".",
     "target": "ESNext",
     "lib": ["ESNext"],
-    "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
     "esModuleInterop": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "outDir": "dist",
+    "sourceMap": true
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["additional.d.ts", "src/**/*.ts"],
+  "exclude": ["node_modules", "/out", "/dist"]
 }

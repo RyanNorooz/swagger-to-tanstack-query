@@ -5,38 +5,48 @@ Contributions and feedback are welcome as we work towards stability. 🛠️_
 
 A tool that converts Swagger documentation to TanStack Query (React Query) hooks, utilizing Axios for HTTP requests.
 
-this tool is suited for projects using React and Tanstack query
+> this tool is suited for projects using React and Tanstack query
 
 ## Features
 
 🚀 Swagger to TanStack Query Hooks: Seamlessly convert Swagger documentation into TanStack Query hooks with comprehensive TypeScript types.
 
-- **📚 Generated Types:** Automatically create TypeScript types for API responses, enhancing code robustness.
+- [x] **📚 Generated Types:** Reliably generate TypeScript types for API responses and DTOs, enhancing code robustness.
 
-- **💡JSDoc Descriptions and Examples:** Rich JSDoc descriptions and examples accompany the generated code, aiding developers in understanding and using the hooks effectively.
+- [x] **💡JSDoc Descriptions and Examples:** Rich JSDoc descriptions and examples accompany the generated code, aiding developers in understanding and using the hooks effectively.
 
-- **🧩 Modularity:** The tool keeps things organized by creating separate files for each endpoint. These files include the hook, types, and necessary logic, making your React Query setup clean and easy to maintain.
+- [ ] **♻️ Query Invalidation:** Mutations invalidate queries with the same route
 
-## Setup
+- [x] **🧩 Modularity:** The tool keeps things organized by creating separate files for each endpoint. These files include the hook, types, and necessary logic, making your React Query setup clean and easy to maintain.
 
-- Install dependencies:
+- [x] 🎨 **Prettier Formatting**: The generated files are formatted with Prettier, ensuring consistent and clean code.
 
-  ```sh
-  pnpm i
-  ```
+- [ ] ⚙️ **Enhanced Stability**: Reliable and standardized output, providing stability between consecutive runs.
 
-## Usage
+## How to
 
-- Run the converter:
+1. Install dependencies:
 
-  ```sh
-  pnpm start --url=https://api.com/docs-json
-  ```
+   ```sh
+   pnpm i
+   ```
 
-  The Swagger JSON file is typically located at some endpoint like:
+1. build
 
-  - `https://api.com/docs-json`
-  - `https://api.com/docs/v1/swagger.json`
+   ```sh
+   pnpm build
+   ```
+
+1. Run
+
+   ```sh
+   pnpm start --url=https://api.com/docs-json
+   ```
+
+   The Swagger JSON file is typically located at some endpoint like:
+
+   - `https://api.com/docs-json`
+   - `https://api.com/docs/v1/swagger.json`
 
 ## Output
 

@@ -1,21 +1,9 @@
-type JsonSchemaType = 'string' | 'number' | 'integer' | 'boolean' | 'object' | 'array'
+import type { Schema } from './types.js'
 
-type JsonSchema = {
-  type: JsonSchemaType
-  properties?: Record<string, JsonSchema>
-  allOf?: JsonSchema[]
-  oneOf?: JsonSchema[]
-  items?: JsonSchema
-  description?: string
-  example?: any
-  format?: string
-  required?: string[]
-}
-
-export function generateInterface(schema: JsonSchema, name = 'Name'): string {
+export function generateInterface(schema: Schema, name = 'Name'): string {
   let interfaceString = `{\n`
 
-  const loopOver = (items) => {
+  const loopOver = (items: Schema) => {
     for (const propName in items) {
       const propSchema = items[propName]
       const propType = generateType(propSchema, propName)
@@ -41,7 +29,7 @@ export function generateInterface(schema: JsonSchema, name = 'Name'): string {
   return interfaceString
 }
 
-function generateType(schema: JsonSchema, name: string): string {
+function generateType(schema: Schema, name: string): string {
   if (schema.type === 'object') {
     const nestedName = `${name.charAt(0).toUpperCase()}${name.slice(1)}`
     return generateInterface(schema, nestedName)
