@@ -1,5 +1,10 @@
 # SwaggerDoc to TanStack Query Hooks Converter
 
+![Node.js Version](https://img.shields.io/badge/Node.js-20.x-green)
+![pnpm Version](https://img.shields.io/badge/pnpm-7.x-orange)
+![TypeScript Version](https://img.shields.io/badge/TypeScript-5.3-blue)
+![React Query Version](https://img.shields.io/badge/React%20Query-5.x-red)
+
 _🚨 **Caution:** This project is highly unstable. It may generate incorrect types or crash unexpectedly.\
 Contributions and feedback are welcome as we work towards stability. 🛠️_
 
@@ -9,38 +14,38 @@ A tool that converts Swagger documentation to TanStack Query (React Query) hooks
 
 ## Features
 
-🚀 Swagger to TanStack Query Hooks: Seamlessly convert Swagger documentation into TanStack Query hooks with comprehensive TypeScript types.
+🚀 Swagger to TanStack Query Hooks: Seamlessly converts Swagger documentation into TanStack Query hooks with comprehensive TypeScript types.
 
 - [x] **📚 Generated Types:** Reliably generate TypeScript types for API responses and DTOs, enhancing code robustness.
 
 - [x] **💡JSDoc Descriptions and Examples:** Rich JSDoc descriptions and examples accompany the generated code, aiding developers in understanding and using the hooks effectively.
 
-- [ ] **♻️ Query Invalidation:** Mutations invalidate queries with the same route
+- [ ] **♻️ Query Invalidation:** Mutations invalidate queries with the same route _(coming soom)_
 
 - [x] **🧩 Modularity:** The tool keeps things organized by creating separate files for each endpoint. These files include the hook, types, and necessary logic, making your React Query setup clean and easy to maintain.
 
 - [x] 🎨 **Prettier Formatting**: The generated files are formatted with Prettier, ensuring consistent and clean code.
 
-- [ ] ⚙️ **Enhanced Stability**: Reliable and standardized output, providing stability between consecutive runs.
+- [ ] ⚙️ **Enhanced Stability**: Reliable and standardized output, providing stability between consecutive runs. _(needs unit testing)_
 
 ## How to
 
 1. Install dependencies:
 
-   ```sh
+   ```ps
    pnpm i
    ```
 
 1. build
 
-   ```sh
+   ```ps
    pnpm build
    ```
 
 1. Run
 
-   ```sh
-   pnpm start --url=https://api.com/docs-json
+   ```ps
+   pnpm start --url="https://api.com/docs-json"
    ```
 
    The Swagger JSON file is typically located at some endpoint like:
@@ -50,14 +55,15 @@ A tool that converts Swagger documentation to TanStack Query (React Query) hooks
 
 ## Output
 
-Generated output will be available inside the `./out` directory.
+The generated output will be available inside the `./out` directory.
 
-a file will be created containing all query keys `./out/tq-keys.ts`
+A file will be created containing all query keys
 
 - <details>
     <summary>tq-keys.ts</summary>
 
   ```ts
+  // ./out/tq-keys.ts
   export const TQ_KEYS = {
     USER_FIND_ONE: 'User Find One',
     USER_FIND_ALL: 'User Find All',
@@ -73,6 +79,8 @@ Endpoints with the GET HTTP verb will get converted to Query hooks
   <summary>Query hook</summary>
 
   ```ts
+  // ./out/hooks/user/useUserFindOne.ts
+
   import { axiosClient } from '@/lib/axios'
   import { TQ_KEYS } from '@/lib/tanstack-query/tq-keys'
   import type { ApiResponseDTO } from '@/types/api.ts'
@@ -112,6 +120,8 @@ Endpoints with **POST**, **PATCH**, **PUT**, **DELETE** HTTP verbs will get conv
   <summary>Mutation hook</summary>
 
   ```ts
+  // ./out/hooks/auth/useAuthLogin.ts
+
   import { axiosClient } from '@/lib/axios'
   import type { ApiResponseDTO } from '@/types/api.ts'
   import { useMutation } from '@tanstack/react-query'
@@ -152,4 +162,4 @@ Contributions are welcome! Feel free to submit issues or pull requests.
 
 ## Acknowledgments
 
-- Special thanks to [TanStack](https://tanstack.com/) for their awesome tools, including React Query.
+Special thanks to [TanStack](https://tanstack.com/) for their awesome tools, including React Query.

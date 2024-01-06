@@ -1,5 +1,4 @@
 import $RefParser from '@apidevtools/json-schema-ref-parser'
-import 'dotenv/config'
 import fs from 'fs/promises'
 import _ from 'lodash'
 import minimist from 'minimist'
