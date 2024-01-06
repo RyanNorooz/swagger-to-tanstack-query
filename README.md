@@ -42,10 +42,16 @@ A tool that converts Swagger documentation to TanStack Query (React Query) hooks
    pnpm build
    ```
 
-1. Run
+1. verify
 
    ```ps
-   pnpm start --url="https://api.com/docs-json"
+   pnpm verify https://api.com/docs-json
+   ```
+
+1. Generate
+
+   ```ps
+   pnpm generate https://api.com/docs-json
    ```
 
    The Swagger JSON file is typically located at some endpoint like:

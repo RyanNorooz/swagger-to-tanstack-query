@@ -17,15 +17,16 @@ const promises: Promise<void>[] = []
 
 const args = minimist(process.argv)
 
-let url, urlString
+let url = args._[2]
+console.log(url)
 
 try {
-  if (!args.url) throw new Error()
-  urlString = args.url.replace(/^["|'](.*)["|']$/, '$1') // trim string quotes if they exist
-  url = new URL(urlString).toString()
+  if (!url) throw new Error()
+  url = url.replace(/^["|'](.*)["|']$/, '$1') // trim string quotes if they exist
+  url = new URL(url).toString()
 } catch {
-  throw new Error('Please provide a valid url. (eg: pnpm start --url=https://api.com/doc-json)', {
-    cause: urlString ?? 'No url was given.',
+  throw new Error('Please provide a valid url. (eg: pnpm generate https://api.com/doc-json)', {
+    cause: url ?? 'No url was given.',
   })
 }
 

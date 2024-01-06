@@ -5,7 +5,8 @@
   "description": "Creates Tanstack-Query hooks from Swagger API documentation",
   "scripts": {
     "build": "tsc",
-    "start": "node dist"
+    "generate": "node dist/generate.js",
+    "verify": "node dist/verify.js"
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "11.1.0",
