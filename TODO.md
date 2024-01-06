@@ -22,7 +22,7 @@
 
    - mutations should invalidate queries with the same route.
 
-1. [ ] **Strengthen Types for `swagger.json`:**
+1. [X] **Strengthen Types for `swagger.json`:**
 
    - Improve the TypeScript types generated from Swagger.json for increased code robustness.
 
