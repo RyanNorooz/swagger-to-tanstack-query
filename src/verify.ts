@@ -1,9 +1,9 @@
 // @ts-nocheck
 
-import $RefParser from '@apidevtools/json-schema-ref-parser'
+import dereferenceJsonSchema from 'dereference-json-schema'
 import minimist from 'minimist'
-import { SwaggerDoc } from './types.js'
 import { swaggerDocSchema } from './schemas.js'
+import type { SwaggerDoc } from './types.js'
 
 const args = minimist(process.argv)
 
@@ -31,7 +31,7 @@ const endTime = performance.now()
 console.log(`downloading SwaggerDoc took ${(endTime - startTime).toFixed(3)} milliseconds`)
 
 const swagger = JSON.parse(swaggerJsonText) as SwaggerDoc
-const schema = (await $RefParser.dereference(swagger)) as typeof swagger
+const schema = dereferenceJsonSchema.dereferenceSync(swagger) as typeof swagger
 
 try {
   swaggerDocSchema.parse(schema) satisfies SwaggerDoc
@@ -39,5 +39,5 @@ try {
   console.log('run: pnpm generate', url)
 } catch (e) {
   console.error('Swagger was not compatible. runing the script will probably result in failure.')
-  if (args.verbose) console.log(e)
+  if (args.verbose) console.log(JSON.stringify(e, undefined, 2))
 }

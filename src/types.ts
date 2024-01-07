@@ -33,6 +33,7 @@ interface Get {
   summary?: string
   tags?: string[]
   parameters: Parameter[]
+  requestBody?: RequestBody
   responses: Responses
   security?: Security[]
 }
@@ -158,9 +159,9 @@ export interface Schema {
   enum?: Example[]
   minimum?: number
   maximum?: number
-  default?: number
+  default?: Example
 }
 
 type Type = 'object' | 'string' | 'number' | 'array' | 'Date' | 'boolean' | 'http'
 
-type Example = string | number | boolean | Example[] // TODO: wider types?
+export type Example = string | number | boolean | Example[] // TODO: wider types?

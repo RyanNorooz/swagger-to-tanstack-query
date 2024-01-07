@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import dereferenceJsonSchema from 'dereference-json-schema'
 import fs from 'fs/promises'
 import _ from 'lodash'

@@ -7,7 +7,7 @@ export function generateInterface(schema: Schema, name = 'Name'): string {
 
   const loopOver = (items: Schema) => {
     for (const propName in items) {
-      const propSchema = items[propName]
+      const propSchema = items[propName as keyof typeof items]!
       const propType = generateType(propSchema, propName)
       let comment = ''
 
@@ -55,6 +55,6 @@ function generateType(schema: Schema, name: string): string {
     })
     return types.join(' | ')
   } else {
-    return schema.type === 'integer' ? 'number' : schema.type
+    return schema.type ?? 'undefined'
   }
 }

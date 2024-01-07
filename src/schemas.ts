@@ -1,6 +1,5 @@
-// @ts-nocheck
-
 import { z } from 'zod'
+import type { Example, Schema } from './types.js'
 
 const contactSchema = z.object({})
 
@@ -16,9 +15,9 @@ const typeSchema = z.union([
 
 // this is cursed
 const exampleSchema = z.union([
-  z.union([z.union([z.string(), z.number(), z.boolean()]), z.lazy(() => z.array(exampleSchema))]),
-  z.lazy(() => z.record(exampleSchema)),
-])
+  z.union([z.string(), z.number(), z.boolean()]),
+  z.lazy(() => z.array(exampleSchema)),
+]) as z.ZodType<Example>
 
 const infoSchema = z.object({
   title: z.string(),
@@ -37,19 +36,22 @@ const bearerSchema = z.object({
 const schemaSchema = z.object({
   type: typeSchema.optional(),
   description: z.string().optional(),
-  example: exampleSchema.optional(),
+  example: z.union([exampleSchema, z.record(exampleSchema)]).optional(),
   enum: z.array(exampleSchema).optional(),
   minimum: z.number().optional(),
   maximum: z.number().optional(),
   required: z.array(z.string()).optional(),
   uniqueItems: z.boolean().optional(),
   format: z.string().optional(),
-  default: z.number().optional(),
+  default: exampleSchema.optional(),
   properties: z.lazy(() => propertiesSchema).optional(),
   oneOf: z.array(z.lazy(() => schemaSchema)).optional(),
   allOf: z.array(z.lazy(() => schemaSchema)).optional(),
-  items: z.lazy(() => schemaSchema).optional(),
-})
+  items: z
+    .lazy(() => schemaSchema)
+    .nullable() //? this is probably unnecessary but an edge case happened that some $ref was missing and now we're here.
+    .optional(),
+}) as z.ZodType<Schema>
 
 const securitySchema = z.object({
   bearer: z.array(schemaSchema),
