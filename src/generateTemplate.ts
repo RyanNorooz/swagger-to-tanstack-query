@@ -92,15 +92,16 @@ export function generateTemplate(props: GenerateTemplateProps) {
     return ${tanstackHookName}({
       ${
         isMutation
-          ? `mutationFn: ${
-              props.params || props.dto
-                ? `(${
-                    props.dto ? `data: ${_.startCase(functionName).replaceAll(' ', '')}DTO` : ''
-                  }) => ${functionName}(${
-                    props.params ? props.params.map((param) => `${param.name}, `).join('') : ''
-                  }${props.dto ? 'data' : ''})`
-                : functionName
-            },`
+          ? `mutationKey: ["${_.startCase(props.fileName.replace('use', ''))}"],
+      mutationFn: ${
+        props.params || props.dto
+          ? `(${
+              props.dto ? `data: ${_.startCase(functionName).replaceAll(' ', '')}DTO` : ''
+            }) => ${functionName}(${
+              props.params ? props.params.map((param) => `${param.name}, `).join('') : ''
+            }${props.dto ? 'data' : ''})`
+          : functionName
+      },`
           : isQuery
             ? `queryKey: [TQ_KEYS.${_.snakeCase(props.fileName.replace('use', '')).toUpperCase()}],
       queryFn: ${

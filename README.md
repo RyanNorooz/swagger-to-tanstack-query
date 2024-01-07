@@ -12,6 +12,8 @@ A tool that converts Swagger documentation to TanStack Query (React Query) hooks
 
 > this tool is suited for projects using React and Tanstack query
 
+- [See examples of generated code](#output)
+
 ## Features
 
 🚀 Swagger to TanStack Query Hooks: Seamlessly converts Swagger documentation into TanStack Query hooks with comprehensive TypeScript types.
@@ -155,6 +157,7 @@ Endpoints with **POST**, **PATCH**, **PUT**, **DELETE** HTTP verbs will get conv
   /** Login */
   export default function useAuthLogin() {
     return useMutation({
+      mutationKey: ['Auth Login'],
       mutationFn: (data: PostAuthLoginDTO) => postAuthLogin(data),
     })
   }

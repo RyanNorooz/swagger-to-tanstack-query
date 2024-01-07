@@ -2,7 +2,7 @@
 
 > This file outlines tasks and enhancements for the SwaggerDoc to TanStack Query Hooks Converter project.
 
-1. [ ] **Mutation Keys:**
+1. [X] **Mutation Keys:**
 
    - hard-coded keys just for the sake of devtools.
 
@@ -14,9 +14,9 @@
 
    - enum types should generate literal types instead of general types like string or number.
 
-1. [ ] **Better Handling of Types:**
+1. [ ] **Better Type generation:**
 
-   - improve clarity and robustness.
+   - fault tolerance and robustness.
 
 1. [ ] **Document Date Formats:**
 
