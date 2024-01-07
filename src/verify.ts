@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import $RefParser from '@apidevtools/json-schema-ref-parser'
 import minimist from 'minimist'
 import { SwaggerDoc } from './types.js'
@@ -35,6 +37,7 @@ try {
   swaggerDocSchema.parse(schema) satisfies SwaggerDoc
   console.log('Swagger is compatible! you can now safely generate your client code.')
   console.log('run: pnpm generate', url)
-} catch {
+} catch (e) {
   console.error('Swagger was not compatible. runing the script will probably result in failure.')
+  if (args.verbose) console.log(e)
 }

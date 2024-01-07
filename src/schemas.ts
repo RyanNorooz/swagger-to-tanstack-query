@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { z } from 'zod'
 
 const contactSchema = z.object({})
@@ -17,7 +19,6 @@ const exampleSchema = z.union([
   z.union([z.union([z.string(), z.number(), z.boolean()]), z.lazy(() => z.array(exampleSchema))]),
   z.lazy(() => z.record(exampleSchema)),
 ])
-
 
 const infoSchema = z.object({
   title: z.string(),

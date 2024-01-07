@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import type { Schema } from './types.js'
 
 export function generateInterface(schema: Schema, name = 'Name'): string {

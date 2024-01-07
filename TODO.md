@@ -2,6 +2,10 @@
 
 > This file outlines tasks and enhancements for the SwaggerDoc to TanStack Query Hooks Converter project.
 
+1. [ ] **Mutation Keys:**
+
+   - hard-coded keys just for the sake of devtools.
+
 1. [ ] **Support for URL Search Params:**
 
    - handle URL search parameters in Swagger documentation.

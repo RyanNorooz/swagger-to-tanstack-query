@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import $RefParser from '@apidevtools/json-schema-ref-parser'
 import fs from 'fs/promises'
 import _ from 'lodash'

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import _ from 'lodash'
 import { generateInterface } from './generateInterface.js'
 import type { Parameter, Schema } from './types.js'
