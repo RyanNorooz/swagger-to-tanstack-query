@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import $RefParser from '@apidevtools/json-schema-ref-parser'
+import dereferenceJsonSchema from 'dereference-json-schema'
 import fs from 'fs/promises'
 import _ from 'lodash'
 import minimist from 'minimist'
@@ -20,7 +20,6 @@ const promises: Promise<void>[] = []
 const args = minimist(process.argv)
 
 let url = args._[2]
-console.log(url)
 
 try {
   if (!url) throw new Error()
@@ -42,8 +41,8 @@ const swaggerJsonText = await blob.text()
 const endTime = performance.now()
 console.log(`downloading SwaggerDoc took ${(endTime - startTime).toFixed(3)} milliseconds`)
 
-const swagger = JSON.parse(swaggerJsonText) as SwaggerDoc
-const schema = (await $RefParser.dereference(swagger)) as typeof swagger
+const swagger = JSON.parse(swaggerJsonText)
+const schema = dereferenceJsonSchema.dereferenceSync(swagger) as SwaggerDoc
 
 try {
   await fs.access('./out', fs.constants.F_OK)
