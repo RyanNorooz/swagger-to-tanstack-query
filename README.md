@@ -22,7 +22,7 @@ A tool that converts Swagger documentation to TanStack Query (React Query) hooks
 
 - [x] **💡JSDoc Descriptions and Examples:** Rich JSDoc descriptions and examples accompany the generated code, aiding developers in understanding and using the hooks effectively.
 
-- [ ] **♻️ Query Invalidation:** Mutations invalidate queries with the same route _(coming soom)_
+- [x] **♻️ Query Invalidation:** Mutations invalidate queries with the same route
 
 - [x] **🧩 Modularity:** The tool keeps things organized by creating separate files for each endpoint. These files include the hook, types, and necessary logic, making your React Query setup clean and easy to maintain.
 
@@ -128,37 +128,40 @@ Endpoints with **POST**, **PATCH**, **PUT**, **DELETE** HTTP verbs will get conv
   <summary>Mutation hook</summary>
 
   ```ts
-  // ./out/hooks/auth/useAuthLogin.ts
+  // ./out/hooks/user/useUserUpdate.ts
 
   import { axiosClient } from '@/lib/axios'
+  import { TQ_KEYS } from '@/lib/tanstack-query/tq-keys'
   import type { ApiResponseDTO } from '@/types/api.ts'
-  import { useMutation } from '@tanstack/react-query'
+  import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-  interface PostAuthLoginDTO {
-    /** Username @example admin */
-    username: string
-    /** Password @example pass1234 */
-    password: string
+  interface PatchUserUpdateDTO {
+    /** User status @example 'active' */
+    status: 'active' | 'inactive' | 'pending' | 'blocked'
   }
 
-  interface PostAuthLoginResult {
-    /** Auth token @example eyJhbGciOiJIIkpXVCJ9.eyJ1c2VySWIWjUQXQoGaZqbKjGuACyaFTznSRhlvbP5b_Qp4Wk */
-    token: string
-  }
+  /** Always an empty object */
+  interface PatchUserUpdateResult {}
 
-  export async function postAuthLogin(data: PostAuthLoginDTO) {
+  export async function patchUserUpdate(id: string, data: PatchUserUpdateDTO) {
     return (await axiosClient({
-      method: 'post',
-      url: `/api/auth/login`,
+      method: 'patch',
+      url: `/api/user/update/${id}`,
       data,
-    })) as ApiResponseDTO<PostAuthLoginResult>
+    })) as ApiResponseDTO<PatchUserUpdateResult>
   }
 
-  /** Login */
-  export default function useAuthLogin() {
+  /** Update User */
+  export default function useUserUpdate(
+    /** @example 29f09449-57b5-4e2a-8d29-ae8f87a7d60d */
+    id: string
+  ) {
+    const queryClient = useQueryClient()
+
     return useMutation({
-      mutationKey: ['Auth Login'],
-      mutationFn: (data: PostAuthLoginDTO) => postAuthLogin(data),
+      mutationKey: ['User Update'],
+      mutationFn: (data: PatchUserUpdateDTO) => patchUserUpdate(id, data),
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: [TQ_KEYS.USER_FIND_ALL] }),
     })
   }
   ```

@@ -79,6 +79,20 @@ for (let i = 0; i < paths.length; i++) {
         fileName.replace('use', '')
       )
 
+    const queryKeys = []
+
+    for (let i = 0; i < paths.length; i++) {
+      const __methods = Object.entries(paths[i]![1])
+      for (let i = 0; i < __methods.length; i++) {
+        const [_method, _details] = __methods[i]!
+
+        if (_method === 'get' && _details?.tags?.includes(details.tags[0]!))
+          queryKeys.push(
+            `${tag.toUpperCase()}_${_.snakeCase(_details.operationId.split('_')[1]).toUpperCase()}`
+          )
+      }
+    }
+
     let template = generateTemplate({
       fileName,
       route,
@@ -88,6 +102,7 @@ for (let i = 0; i < paths.length; i++) {
       params: details.parameters,
       resultExample: Object.entries(details.responses)?.find(([code]) => code.startsWith('20'))?.[1]
         ?.content?.['application/json']?.schema.properties.result,
+      shouldInvalidateQuery: method !== 'get' && !!queryKeys.length && queryKeys,
     })
 
     template = await prettier.format(template, prettierOptions)

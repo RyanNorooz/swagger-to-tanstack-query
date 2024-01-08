@@ -11,10 +11,11 @@ export function generateInterface(schema: Schema, name = 'Name'): string {
       const propType = generateType(propSchema, propName)
       let comment = ''
 
-      if (propSchema.description || propSchema.example) {
+      if (propSchema.description || propSchema.example || propSchema.default) {
         comment += '  /**'
         if (propSchema.description) comment += ' ' + propSchema.description
         if (propSchema.example) comment += ' @example ' + propSchema.example
+        if (propSchema.default) comment += ' @default ' + propSchema.default
         comment += ' */\n'
       }
 

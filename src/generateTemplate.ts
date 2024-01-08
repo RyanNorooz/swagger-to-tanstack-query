@@ -10,6 +10,7 @@ interface GenerateTemplateProps {
   dto?: Schema
   params?: Parameter[]
   resultExample?: any
+  shouldInvalidateQuery: false | string[]
 }
 
 export function generateTemplate(props: GenerateTemplateProps) {
@@ -22,13 +23,15 @@ export function generateTemplate(props: GenerateTemplateProps) {
   const isQuery = tanstackHookName === 'useQuery'
 
   return `import { axiosClient } from '@/lib/axios'${
-    props.method.toLowerCase() === 'get'
+    props.method.toLowerCase() === 'get' || props.shouldInvalidateQuery
       ? `
   import { TQ_KEYS } from '@/lib/tanstack-query/tq-keys'`
       : ''
   }
   import type { ApiResponseDTO } from '@/types/api.ts'
-  import { ${tanstackHookName} } from '@tanstack/react-query'
+  import { ${tanstackHookName}${
+    props.shouldInvalidateQuery ? ', useQueryClient' : ''
+  } } from '@tanstack/react-query'
   ${
     props.dto
       ? `
@@ -88,7 +91,9 @@ export function generateTemplate(props: GenerateTemplateProps) {
           )
           .join('')
       : ''
-  }${isQuery && props.dto ? `data: ${_.startCase(functionName).replaceAll(' ', '')}DTO` : ''}) {
+  }${isQuery && props.dto ? `data: ${_.startCase(functionName).replaceAll(' ', '')}DTO` : ''}) {${
+    props.shouldInvalidateQuery ? `\nconst queryClient = useQueryClient()\n` : ''
+  }
     return ${tanstackHookName}({
       ${
         isMutation
@@ -101,6 +106,12 @@ export function generateTemplate(props: GenerateTemplateProps) {
               props.params ? props.params.map((param) => `${param.name}, `).join('') : ''
             }${props.dto ? 'data' : ''})`
           : functionName
+      }${
+        props.shouldInvalidateQuery
+          ? `,\n    onSuccess: () => queryClient.invalidateQueries({ queryKey: [${props.shouldInvalidateQuery
+              .map((key) => `TQ_KEYS.${key}`)
+              .join(', ')}] })`
+          : ''
       },`
           : isQuery
             ? `queryKey: [TQ_KEYS.${_.snakeCase(props.fileName.replace('use', '')).toUpperCase()}],

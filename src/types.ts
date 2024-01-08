@@ -15,6 +15,7 @@ interface Path {
   post?: Post
   get?: Get
   patch?: Patch
+  // put?: Put // TODO
   delete?: Delete
 }
 
