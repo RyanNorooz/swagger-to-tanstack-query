@@ -54,7 +54,9 @@ function generateType(schema: Schema, name: string): string {
       return generateType(subSchema, typeName)
     })
     return types.join(' | ')
+  } else if (schema.enum) {
+    return schema.enum.join(' | ')
   } else {
-    return schema.type ?? 'undefined'
+    return schema.type ?? 'unknown'
   }
 }

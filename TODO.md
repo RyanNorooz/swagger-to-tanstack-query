@@ -10,7 +10,7 @@
 
    - handle URL search parameters in Swagger documentation.
 
-1. [ ] **Support for Enum Types:**
+1. [X] **Support for Enum Types:**
 
    - enum types should generate literal types instead of general types like string or number.
 
