@@ -15,9 +15,7 @@ interface GenerateTemplateProps {
 
 export function generateTemplate(props: GenerateTemplateProps) {
   const functionName = props.method + props.fileName.replace('use', '')
-  const tanstackHookName = ['post', 'patch', 'delete'].includes(props.method)
-    ? 'useMutation'
-    : 'useQuery'
+  const tanstackHookName = props.method === 'get' ? 'useQuery' : 'useMutation'
 
   const isMutation = tanstackHookName === 'useMutation'
   const isQuery = tanstackHookName === 'useQuery'
