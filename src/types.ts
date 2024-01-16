@@ -11,45 +11,9 @@ interface Paths {
   [key: string]: AtLeastOne<Path>
 }
 
-interface Path {
-  post?: Post
-  get?: Get
-  patch?: Patch
-  // put?: Put // TODO
-  delete?: Delete
-}
+type Path = Partial<Record<'post' | 'get' | 'patch' | 'put' | 'delete', HttpVerb>>
 
-interface Post {
-  operationId: string
-  summary?: string
-  tags?: string[]
-  parameters: any[]
-  requestBody?: RequestBody
-  responses: Responses
-  security?: Security[]
-}
-
-interface Get {
-  operationId: string
-  summary?: string
-  tags?: string[]
-  parameters: Parameter[]
-  requestBody?: RequestBody
-  responses: Responses
-  security?: Security[]
-}
-
-interface Patch {
-  operationId: string
-  summary?: string
-  tags?: string[]
-  parameters: any[]
-  requestBody?: RequestBody
-  responses: Responses
-  security?: Security[]
-}
-
-interface Delete {
+interface HttpVerb {
   operationId: string
   summary?: string
   tags?: string[]
